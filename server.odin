@@ -32,6 +32,7 @@ main :: proc() {
 
 	for i in 0..10000 {
 		enemy := entity_create(&ctx, 0);
+		component_attach(&ctx, FOO, enemy, nil);
 		transform := cast(^Transform)component_fetch(&ctx, Component_Types.Transform, enemy);
 		transform.position.x = 42*cast(f32)i;
 		transform.position.y = 80*cast(f32)i;
