@@ -12,10 +12,6 @@ Foo :: struct #ordered {
 	bar: u32,
 }
 
-my_register_cb :: proc(ctx: ^Ctx) {
-	component_register(ctx, FOO, size_of(Foo));
-}
-
 main :: proc() #no_bounds_check {
 	ctx := Ctx{};
 
@@ -24,7 +20,9 @@ main :: proc() #no_bounds_check {
 	ctx.world_size = Vector3{5000, 5000, 0};
 	ctx.max_entities = 15000;
 	ctx.max_connections = 1000;
-	ctx.components.register_cb = my_register_cb;
+	ctx.components.register_cb = proc(ctx: ^Ctx) {
+		component_register(ctx, FOO, size_of(Foo));
+	}
 
 	init(&ctx);
 	defer free(&ctx);
