@@ -4,10 +4,6 @@ import "core:fmt.odin";
 
 FOO :: FIRST_FREE_COMPONENT;
 
-on_connect_accepted :: proc(event: ^Event) {
-	fmt.println("spawning player...");
-}
-
 Foo :: struct #ordered {
 	bar: u32,
 }
@@ -27,7 +23,9 @@ main :: proc() #no_bounds_check {
 	init(&ctx);
 	defer free(&ctx);
 
-	event_add(&ctx, Event_Types.Connection_Accept, on_connect_accepted);
+	event_add(&ctx, Event_Types.Connection_Accept, proc(event: ^Event) {
+		fmt.println("spawning player...");
+	});
 
 	host_name := "localhost\x00";
 	network_start(&ctx, Address{&host_name[0], 27010});
