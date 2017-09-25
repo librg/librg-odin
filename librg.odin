@@ -115,8 +115,10 @@ Event_Types :: enum i32 {
 	Client_Streamer_Remove,
 	Client_Streamer_Update,
 
-	Last_Enum_Number,
+	First_Free,
 }
+
+FIRST_FREE_EVENT :: Event_Types.First_Free;
 
 Component_Types :: enum i32 {
 	Dummy,
@@ -125,8 +127,10 @@ Component_Types :: enum i32 {
 	Stream,
 	Control,
 	Client,
-	Component_Last,
+	First_Free,
 }
+
+FIRST_FREE_COMPONENT :: Component_Types.First_Free;
 
 Filter :: struct #raw_union {
 	struct {

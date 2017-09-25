@@ -2,8 +2,18 @@ using import "librg.odin";
 when ODIN_OS == "windows" do import win32 "core:sys/windows.odin";
 import "core:fmt.odin";
 
+FOO :: FIRST_FREE_COMPONENT;
+
 on_connect_accepted :: proc(event: ^Event) {
 	fmt.println("spawning player...");
+}
+
+Foo :: struct #ordered {
+	bar: u32,
+}
+
+my_register_cb :: proc(ctx: ^Ctx) {
+	component_register(ctx, FOO, size_of(Foo));
 }
 
 main :: proc() #no_bounds_check {
@@ -14,6 +24,7 @@ main :: proc() #no_bounds_check {
 	ctx.world_size = Vector3{5000, 5000, 0};
 	ctx.max_entities = 15000;
 	ctx.max_connections = 1000;
+	ctx.components.register_cb = my_register_cb;
 
 	init(&ctx);
 	defer free(&ctx);
@@ -29,7 +40,6 @@ main :: proc() #no_bounds_check {
 		transform.position.x = 42*cast(f32)i;
 		transform.position.y = 80*cast(f32)i;
 	}
-
 
 	for true {
 		tick(&ctx);
