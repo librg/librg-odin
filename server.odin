@@ -8,7 +8,7 @@ Foo :: struct #ordered {
 	bar: u32,
 }
 
-main :: proc() #no_bounds_check {
+main :: proc() {
 	ctx := Ctx{};
 
 	ctx.tick_delay = 32;
