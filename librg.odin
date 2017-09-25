@@ -10,7 +10,7 @@ foreign librg32 {
 	options_set                  :: proc(option: Options, value: u32)                                            # link_name "librg_options_set" ---;
 	options_get                  :: proc(option: Options) -> u32                                                 # link_name "librg_options_get" ---;
 
-	init                         :: proc(ctx: ^Ctx)                                                              # link_name "librg_init" ---;
+	init                         :: proc(ctx: ^Ctx, comp: component_proc)                                        # link_name "librg_init" ---;
 	tick                         :: proc(ctx: ^Ctx)                                                              # link_name "librg_tick" ---;
 	free                         :: proc(ctx: ^Ctx)                                                              # link_name "librg_free" ---;
 	release                      :: proc(ptr: rawptr)                                                            # link_name "librg_release" ---;
@@ -256,7 +256,6 @@ Ctx       :: struct #ordered {
 		data: rawptr,
 		size, count: uint,
 		headers: rawptr,
-		register_cb: component_proc,
 	},
 
 	entity: struct #ordered {

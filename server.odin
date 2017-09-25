@@ -16,11 +16,11 @@ main :: proc() {
 	ctx.world_size = Vector3{5000, 5000, 0};
 	ctx.max_entities = 15000;
 	ctx.max_connections = 1000;
-	ctx.components.register_cb = proc(ctx: ^Ctx) {
-		component_register(ctx, FOO, size_of(Foo));
-	};
 
-	init(&ctx);
+	init(&ctx, proc(ctx: ^Ctx) {
+		component_register(ctx, FOO, size_of(Foo));
+	});
+
 	defer free(&ctx);
 
 	event_add(&ctx, Event_Types.Connection_Accept, proc(event: ^Event) {
