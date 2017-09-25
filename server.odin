@@ -23,7 +23,7 @@ main :: proc() {
 	host_name := "localhost\x00";
 	network_start(&ctx, Address{&host_name[0], 27010});
 
-	for i in 0..10000 {
+	for i in 0..1000 {
 		enemy := entity_create(&ctx, 0);
 		transform := cast(^Transform)component_fetch(&ctx, Component_Types.Transform, enemy);
 		transform.position.x = 42;
