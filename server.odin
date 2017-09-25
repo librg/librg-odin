@@ -6,7 +6,7 @@ on_connect_accepted :: proc(event: ^Event) {
 	fmt.println("spawning player...");
 }
 
-main :: proc() {
+main :: proc() #no_bounds_check {
 	ctx := Ctx{};
 
 	ctx.tick_delay = 32;
@@ -23,12 +23,13 @@ main :: proc() {
 	host_name := "localhost\x00";
 	network_start(&ctx, Address{&host_name[0], 27010});
 
-	for i in 0..1000 {
+	for i in 0..10000 {
 		enemy := entity_create(&ctx, 0);
 		transform := cast(^Transform)component_fetch(&ctx, Component_Types.Transform, enemy);
-		transform.position.x = 42;
-		transform.position.y = 80;
+		transform.position.x = 42*cast(f32)i;
+		transform.position.y = 80*cast(f32)i;
 	}
+
 
 	for true {
 		tick(&ctx);

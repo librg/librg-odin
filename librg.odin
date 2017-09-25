@@ -19,13 +19,13 @@ foreign librg32 {
 	is_server                    :: proc(ctx: ^Ctx) -> bool                                                      # link_name "librg_is_server" ---;
 	is_client                    :: proc(ctx: ^Ctx) -> bool                                                      # link_name "librg_is_client" ---;
 
-	entity_create                :: proc(ctx: ^Ctx, etype: u32) -> u64                                           # link_name "librg_entity_create" ---;
-	entity_create_shared         :: proc(ctx: ^Ctx, remote: Entity, etype: u32) -> u64                           # link_name "librg_entity_create_shared" ---;
+	entity_create                :: proc(ctx: ^Ctx, etype: u32) -> Entity                                        # link_name "librg_entity_create" ---;
+	entity_create_shared         :: proc(ctx: ^Ctx, remote: Entity, etype: u32) -> Entity                        # link_name "librg_entity_create_shared" ---;
 	entity_valid                 :: proc(ctx: ^Ctx, entity: Entity) -> bool                                      # link_name "librg_entity_valid" ---;
 	entity_type                  :: proc(ctx: ^Ctx, entity: Entity) -> u32                                       # link_name "librg_entity_type" ---;
 	entity_destroy               :: proc(ctx: ^Ctx, entity: Entity)                                              # link_name "librg_entity_destroy" ---;
 	entity_query                 :: proc(ctx: ^Ctx, entity: Entity, result: ^^Entity) -> uint                    # link_name "librg_entity_query_raw" ---;
-	entity_get                   :: proc(ctx: ^Ctx, peer: enet.Peer) -> u64                                      # link_name "librg_entity_get" ---;
+	entity_get                   :: proc(ctx: ^Ctx, peer: enet.Peer) -> Entity                                   # link_name "librg_entity_get" ---;
 	entity_set_visible           :: proc(ctx: ^Ctx, entity: Entity, state: bool)                                 # link_name "librg_entity_set_visible" ---;
 	entity_set_visible_for       :: proc(ctx: ^Ctx, entity: Entity, target: Entity, state: bool)                 # link_name "librg_entity_set_visible_for" ---;
 	entity_get_visible           :: proc(ctx: ^Ctx, entity: Entity) -> bool                                      # link_name "librg_entity_get_visible" ---;
@@ -36,9 +36,9 @@ foreign librg32 {
 	entity_each                  :: proc(ctx: ^Ctx, filter: Filter, callback: entity_proc)                       # link_name "librg_entity_each" ---;
 
 	component_register           :: proc(ctx: ^Ctx, index: Component_Types, comp_size: uint)                     # link_name "librg_component_register" ---;
-	component_attach             :: proc(ctx: ^Ctx, index: Component_Types, entity: u64, data: rawptr) -> rawptr # link_name "librg_component_attach" ---;
-	component_fetch              :: proc(ctx: ^Ctx, index: Component_Types, entity: u64) -> rawptr               # link_name "librg_component_fetch" ---;
-	component_detach             :: proc(ctx: ^Ctx, index: Component_Types, entity: u64)                         # link_name "librg_component_detach" ---;
+	component_attach             :: proc(ctx: ^Ctx, index: Component_Types, entity: Entity, data: rawptr) -> rawptr # link_name "librg_component_attach" ---;
+	component_fetch              :: proc(ctx: ^Ctx, index: Component_Types, entity: Entity) -> rawptr               # link_name "librg_component_fetch" ---;
+	component_detach             :: proc(ctx: ^Ctx, index: Component_Types, entity: Entity)                         # link_name "librg_component_detach" ---;
 	component_each               :: proc(ctx: ^Ctx, index: Component_Types, callback: entity_proc)               # link_name "librg_component_each" ---;
 
 	event_add                    :: proc(ctx: ^Ctx, event_id: Event_Types, callback: event_proc) -> u64          # link_name "librg_event_add" ---;
@@ -132,7 +132,7 @@ Filter :: struct #raw_union {
 	struct {
 		contains1, contains2, contains3, contains4,
 		contains5, contains6, contains7, contains8: u32,
-		excludes5, excludes6, excludes7, excludes8: u32,
+		excludes1, excludes2, excludes3, excludes4: u32,
 	},
 
 	struct {
@@ -144,7 +144,7 @@ Filter :: struct #raw_union {
 Component_Meta :: struct #ordered {
 	offset: uint,
 	size:   uint,
-	used:  ^u32,
+	used:   rawptr,
 }
 
 Entity_Pool :: struct #ordered {
@@ -160,7 +160,7 @@ Address :: struct #ordered {
 
 Message :: struct #ordered {
 	ctx: ^Ctx,
-	data: ^u8,
+	data: rawptr,
 	peer: enet.Peer,
 	packet: enet.Packet,
 }
@@ -168,7 +168,7 @@ Message :: struct #ordered {
 Event     :: struct #ordered {
 	ctx: ^Ctx,
 	data: ^rawptr,
-	entity: u64,
+	entity: Entity,
 	userptr: rawptr,
 	rejected: u32,
 }
@@ -191,12 +191,12 @@ Stream    :: struct #ordered {
 
 Meta      :: struct #ordered {
 	etype: u32,
-	ignored: rawptr,
+	ignored: Hash_Map,
 }
 
 Client    :: struct #ordered {
 	peer: enet.Peer,
-	last_snapshot: rawptr,
+	last_snapshot: Hash_Map,
 }
 
 Allocator :: struct #ordered {
@@ -237,21 +237,25 @@ Ctx       :: struct #ordered {
 
 	messages: rawptr,
 
-	network: struct {
+	network: struct #ordered {
 		peer: enet.Peer,
 		host: enet.Host,
 
 		connected_peers: Hash_Map,
 	},
 
-	components: struct {
+	streams: struct #ordered {
+		input, output: Data,
+	},
+
+	components: struct #ordered {
 		data: rawptr,
 		size, count: uint,
 		headers: rawptr,
 		register_cb: component_proc,
 	},
 
-	entity: struct {
+	entity: struct #ordered {
 		ignored: Hash_Map,
 		shared, native: Entity_Pool,
 
@@ -268,5 +272,5 @@ event_proc     :: #type proc(event: ^Event);
 MODE_SERVER :: 0;
 MODE_CLIENT :: 1;
 
-Entity :: u64;
+Entity :: u32;
 Data   :: rawptr;
