@@ -38,7 +38,7 @@ main :: proc() {
 		transform.position.y = 80*cast(f32)i;
 	}
 
-	for true {
+	for {
 		tick(&ctx);
 		win32.sleep(1);
 	}

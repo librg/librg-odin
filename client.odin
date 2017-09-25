@@ -46,7 +46,7 @@ main :: proc() {
 	host_name := "localhost\x00";
 	network_start(&ctx, Address{&host_name[0], 27010});
 
-	for true {
+	for {
 		tick(&ctx);
 		win32.sleep(1);
 	}
