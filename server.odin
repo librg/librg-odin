@@ -22,7 +22,7 @@ main :: proc() #no_bounds_check {
 	ctx.max_connections = 1000;
 	ctx.components.register_cb = proc(ctx: ^Ctx) {
 		component_register(ctx, FOO, size_of(Foo));
-	}
+	};
 
 	init(&ctx);
 	defer free(&ctx);
