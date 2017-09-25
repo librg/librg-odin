@@ -7,96 +7,82 @@ import "enet.odin";
 
 
 foreign librg32 {
-	options_set                  :: proc(option: Options, value: u32)                                        # link_name "librg_options_set" ---;
-	options_get                  :: proc(option: Options)                                  -> u32            # link_name "librg_options_get" ---;
+	options_set                  :: proc(option: Options, value: u32)                                               # link_name "librg_options_set" ---;
+	options_get                  :: proc(option: Options)                                              -> u32       # link_name "librg_options_get" ---;
 
-	init                         :: proc(ctx: ^Ctx)                                                          # link_name "librg_init" ---;
-	tick                         :: proc(ctx: ^Ctx)                                                          # link_name "librg_tick" ---;
-	free                         :: proc(ctx: ^Ctx)                                                          # link_name "librg_free" ---;
-	release                      :: proc(ptr: rawptr)                                                        # link_name "librg_release" ---;
-	release_array                :: proc(ptr: rawptr)                                                        # link_name "librg_release_array" ---;
+	init                         :: proc(ctx: ^Ctx)                                                                 # link_name "librg_init" ---;
+	tick                         :: proc(ctx: ^Ctx)                                                                 # link_name "librg_tick" ---;
+	free                         :: proc(ctx: ^Ctx)                                                                 # link_name "librg_free" ---;
+	release                      :: proc(ptr: rawptr)                                                               # link_name "librg_release" ---;
+	release_array                :: proc(ptr: rawptr)                                                               # link_name "librg_release_array" ---;
 
-	is_server                    :: proc(ctx: ^Ctx)                                        -> bool           # link_name "librg_is_server" ---;
-	is_client                    :: proc(ctx: ^Ctx)                                        -> bool           # link_name "librg_is_client" ---;
+	is_server                    :: proc(ctx: ^Ctx)                                                    -> bool      # link_name "librg_is_server" ---;
+	is_client                    :: proc(ctx: ^Ctx)                                                    -> bool      # link_name "librg_is_client" ---;
 
-	entity_create                :: proc(ctx: ^Ctx, etype: u32)                            -> u64            # link_name "librg_entity_create" ---;
-	entity_create_shared         :: proc(ctx: ^Ctx, remote: u64, etype: u32)               -> u64            # link_name "librg_entity_create_shared" ---;
-	entity_valid                 :: proc(ctx: ^Ctx, entity: u64)                           -> bool           # link_name "librg_entity_valid" ---;
-	entity_type                  :: proc(ctx: ^Ctx, entity: u64)                           -> u32            # link_name "librg_entity_type" ---;
-	entity_destroy               :: proc(ctx: ^Ctx, entity: u64)                                             # link_name "librg_entity_destroy" ---;
-	entity_query                 :: proc(ctx: ^Ctx, entity: u64, result: ^^u64)            -> uint           # link_name "librg_entity_query_raw" ---;
-	entity_get                   :: proc(ctx: ^Ctx, peer: enet.Peer)                       -> u64            # link_name "librg_entity_get" ---;
-	entity_set_visible           :: proc(ctx: ^Ctx, entity: u64, state: bool)                                # link_name "librg_entity_set_visible" ---;
-	entity_set_visible_for       :: proc(ctx: ^Ctx, entity: u64, target: u64, state: bool)                   # link_name "librg_entity_set_visible_for" ---;
-	entity_get_visible           :: proc(ctx: ^Ctx, entity: u64)                           -> bool           # link_name "librg_entity_get_visible" ---;
-	entity_get_visible_for       :: proc(ctx: ^Ctx, entity: u64, target: u64)              -> bool           # link_name "librg_entity_get_visible_for" ---;
-	entity_control_set           :: proc(ctx: ^Ctx, entity: u64, peer: enet.Peer)                            # link_name "librg_entity_control_set" ---;
-	entity_control_get           :: proc(ctx: ^Ctx, entity: u64)                           -> enet.Peer      # link_name "librg_entity_control_get" ---;
-	entity_control_remove        :: proc(ctx: ^Ctx, entity: u64)                                             # link_name "librg_entity_control_remove" ---;
-	entity_each                  :: proc(ctx: ^Ctx, filter: Filter, callback: entity_proc)                   # link_name "librg_entity_each" ---;
+	entity_create                :: proc(ctx: ^Ctx, etype: u32)                                        -> u64       # link_name "librg_entity_create" ---;
+	entity_create_shared         :: proc(ctx: ^Ctx, remote: Entity, etype: u32)                        -> u64       # link_name "librg_entity_create_shared" ---;
+	entity_valid                 :: proc(ctx: ^Ctx, entity: Entity)                                    -> bool      # link_name "librg_entity_valid" ---;
+	entity_type                  :: proc(ctx: ^Ctx, entity: Entity)                                    -> u32       # link_name "librg_entity_type" ---;
+	entity_destroy               :: proc(ctx: ^Ctx, entity: Entity)                                                 # link_name "librg_entity_destroy" ---;
+	entity_query                 :: proc(ctx: ^Ctx, entity: Entity, result: ^^Entity)                  -> uint      # link_name "librg_entity_query_raw" ---;
+	entity_get                   :: proc(ctx: ^Ctx, peer: enet.Peer)                                   -> u64       # link_name "librg_entity_get" ---;
+	entity_set_visible           :: proc(ctx: ^Ctx, entity: Entity, state: bool)                                    # link_name "librg_entity_set_visible" ---;
+	entity_set_visible_for       :: proc(ctx: ^Ctx, entity: Entity, target: Entity, state: bool)                    # link_name "librg_entity_set_visible_for" ---;
+	entity_get_visible           :: proc(ctx: ^Ctx, entity: Entity)                                    -> bool      # link_name "librg_entity_get_visible" ---;
+	entity_get_visible_for       :: proc(ctx: ^Ctx, entity: Entity, target: Entity)                    -> bool      # link_name "librg_entity_get_visible_for" ---;
+	entity_control_set           :: proc(ctx: ^Ctx, entity: Entity, peer: enet.Peer)                                # link_name "librg_entity_control_set" ---;
+	entity_control_get           :: proc(ctx: ^Ctx, entity: Entity)                                    -> enet.Peer # link_name "librg_entity_control_get" ---;
+	entity_control_remove        :: proc(ctx: ^Ctx, entity: Entity)                                                 # link_name "librg_entity_control_remove" ---;
+	entity_each                  :: proc(ctx: ^Ctx, filter: Filter, callback: entity_proc)                          # link_name "librg_entity_each" ---;
 
-	component_register           :: proc(ctx: ^Ctx, index: Component_Types, comp_size: uint)                             # link_name "librg_component_register" ---;
-	component_attach             :: proc(ctx: ^Ctx, index: Component_Types, entity: u64, data: rawptr) -> rawptr         # link_name "librg_component_attach" ---;
-	component_fetch              :: proc(ctx: ^Ctx, index: Component_Types, entity: u64)               -> rawptr         # link_name "librg_component_fetch" ---;
-	component_detach             :: proc(ctx: ^Ctx, index: Component_Types, entity: u64)                                 # link_name "librg_component_detach" ---;
-	component_each               :: proc(ctx: ^Ctx, index: Component_Types, callback: entity_proc)                       # link_name "librg_component_each" ---;
+	component_register           :: proc(ctx: ^Ctx, index: Component_Types, comp_size: uint)                        # link_name "librg_component_register" ---;
+	component_attach             :: proc(ctx: ^Ctx, index: Component_Types, entity: u64, data: rawptr) -> rawptr    # link_name "librg_component_attach" ---;
+	component_fetch              :: proc(ctx: ^Ctx, index: Component_Types, entity: u64)               -> rawptr    # link_name "librg_component_fetch" ---;
+	component_detach             :: proc(ctx: ^Ctx, index: Component_Types, entity: u64)                            # link_name "librg_component_detach" ---;
+	component_each               :: proc(ctx: ^Ctx, index: Component_Types, callback: entity_proc)                  # link_name "librg_component_each" ---;
 
-	event_add                    :: proc(ctx: ^Ctx, event_id: Event_Types, callback: event_proc)   -> u64            # link_name "librg_event_add" ---;
-	event_remove                 :: proc(ctx: ^Ctx, event_id: Event_Types, index: u64)                               # link_name "librg_event_remove" ---;
-	event_trigger                :: proc(ctx: ^Ctx, event_id: Event_Types, event: ^Event)                            # link_name "librg_event_trigger" ---;
-	event_reject                 :: proc(event: ^Event)                                                      # link_name "librg_event_reject" ---;
-	event_succeeded              :: proc(event: ^Event)                                                      # link_name "librg_event_succeeded" ---;
+	event_add                    :: proc(ctx: ^Ctx, event_id: Event_Types, callback: event_proc)       -> u64       # link_name "librg_event_add" ---;
+	event_remove                 :: proc(ctx: ^Ctx, event_id: Event_Types, index: u64)                              # link_name "librg_event_remove" ---;
+	event_trigger                :: proc(ctx: ^Ctx, event_id: Event_Types, event: ^Event)                           # link_name "librg_event_trigger" ---;
+	event_reject                 :: proc(event: ^Event)                                                             # link_name "librg_event_reject" ---;
+	event_succeeded              :: proc(event: ^Event)                                                             # link_name "librg_event_succeeded" ---;
 
-	data_init                    :: proc(data: rawptr)                                                       # link_name "librg_data_init" ---;
-	data_init_size               :: proc(data: rawptr, size: uint)                                           # link_name "librg_data_init_size" ---;
-	data_free                    :: proc(data: rawptr)                                                       # link_name "librg_data_free" ---;
-	data_reset                   :: proc(data: rawptr)                                                       # link_name "librg_data_reset" ---;
-	data_grow                    :: proc(data: rawptr, min_size: uint)                                       # link_name "librg_data_grow" ---;
-	data_capacity                :: proc(data: rawptr)                                     -> uint           # link_name "librg_data_capacity" ---;
-	data_get_rpos                :: proc(data: rawptr)                                     -> uint           # link_name "librg_data_get_rpos" ---;
-	data_get_wpos                :: proc(data: rawptr)                                     -> uint           # link_name "librg_data_get_wpos" ---;
-	data_set_rpos                :: proc(data: rawptr, position: uint)                                       # link_name "librg_data_set_rpos" ---;
-	data_set_wpos                :: proc(data: rawptr, position: uint)                                       # link_name "librg_data_set_wpos" ---;
-	data_set_rptr                :: proc(data: rawptr, ptr: rawptr, size: uint)                              # link_name "librg_data_set_rptr" ---;
-	data_set_wptr                :: proc(data: rawptr, ptr: rawptr, size: uint)                              # link_name "librg_data_set_wptr" ---;
-	data_set_rptr_at             :: proc(data: rawptr, ptr: rawptr, size: uint, position: uint)              # link_name "librg_data_set_rptr_at" ---;
-	data_set_wptr_at             :: proc(data: rawptr, ptr: rawptr, size: uint, position: uint)              # link_name "librg_data_set_wptr_at" ---;
+	data_init                    :: proc(data: ^Data)                                                               # link_name "librg_data_init" ---;
+	data_init_size               :: proc(data: ^Data, size: uint)                                                   # link_name "librg_data_init_size" ---;
+	data_free                    :: proc(data: ^Data)                                                               # link_name "librg_data_free" ---;
+	data_reset                   :: proc(data: ^Data)                                                               # link_name "librg_data_reset" ---;
+	data_grow                    :: proc(data: ^Data, min_size: uint)                                               # link_name "librg_data_grow" ---;
+	data_capacity                :: proc(data: ^Data)                                                  -> uint      # link_name "librg_data_capacity" ---;
+	data_get_rpos                :: proc(data: ^Data)                                                  -> uint      # link_name "librg_data_get_rpos" ---;
+	data_get_wpos                :: proc(data: ^Data)                                                  -> uint      # link_name "librg_data_get_wpos" ---;
+	data_set_rpos                :: proc(data: ^Data, position: uint)                                               # link_name "librg_data_set_rpos" ---;
+	data_set_wpos                :: proc(data: ^Data, position: uint)                                               # link_name "librg_data_set_wpos" ---;
+	data_rptr                    :: proc(data: ^Data, ptr: rawptr, size: uint)                                      # link_name "librg_data_rptr" ---;
+	data_wptr                    :: proc(data: ^Data, ptr: rawptr, size: uint)                                      # link_name "librg_data_wptr" ---;
+	data_rptr_at                 :: proc(data: ^Data, ptr: rawptr, size: uint, position: uint)                      # link_name "librg_data_rptr_at" ---;
+	data_wptr_at                 :: proc(data: ^Data, ptr: rawptr, size: uint, position: uint)                      # link_name "librg_data_wptr_at" ---;
 
-	/* TODO: Replace these with data_write/read funcs
-	data_ru8                     :: proc(data: rawptr)                                     -> u8             # link_name "librg_data_ru8" ---;
-	data_wu8                     :: proc(data: rawptr, value: u8)                                            # link_name "librg_data_wu8" ---;
-	data_ri8                     :: proc(data: rawptr)                                     -> i8             # link_name "librg_data_ri8" ---;
-	data_wi8                     :: proc(data: rawptr, value: i8)                                            # link_name "librg_data_wi8" ---;
-	data_ru16                    :: proc(data: rawptr)                                     -> u16            # link_name "librg_data_ru16" ---;
-	data_wu16                    :: proc(data: rawptr, value: u16)                                           # link_name "librg_data_wu16" ---;
-	data_ri16                    :: proc(data: rawptr)                                     -> i16            # link_name "librg_data_ri16" ---;
-	data_wi16                    :: proc(data: rawptr, value: i16)                                           # link_name "librg_data_wi16" ---;
-	data_ru32                    :: proc(data: rawptr)                                     -> u32            # link_name "librg_data_ru32" ---;
-	data_wu32                    :: proc(data: rawptr, value: u32)                                           # link_name "librg_data_wu32" ---;
-	data_ri32                    :: proc(data: rawptr)                                     -> i32            # link_name "librg_data_ri32" ---;
-	data_wi32                    :: proc(data: rawptr, value: i32)                                           # link_name "librg_data_wi32" ---;
-	data_ru64                    :: proc(data: rawptr)                                     -> u64            # link_name "librg_data_ru64" ---;
-	data_wu64                    :: proc(data: rawptr, value: u64)                                           # link_name "librg_data_wu64" ---;
-	data_ri64                    :: proc(data: rawptr)                                     -> i64            # link_name "librg_data_ri64" ---;
-	data_wi64                    :: proc(data: rawptr, value: i64)                                           # link_name "librg_data_wi64" ---;
-	data_rf32                    :: proc(data: rawptr)                                     -> f32            # link_name "librg_data_rf32" ---;
-	data_wf32                    :: proc(data: rawptr, value: f32)                                           # link_name "librg_data_wf32" ---;
-	data_rf64                    :: proc(data: rawptr)                                     -> f64            # link_name "librg_data_rf64" ---;
-	data_wf64                    :: proc(data: rawptr, value: f64)                                           # link_name "librg_data_wf64" ---;
-	*/
-
-	is_connected                 :: proc(ctx: ^Ctx)                                        -> bool           # link_name "librg_is_connected" ---;
-	network_start                :: proc(ctx: ^Ctx, address: Address)                                        # link_name "librg_network_start" ---;
-	network_stop                 :: proc(ctx: ^Ctx)                                                          # link_name "librg_network_stop" ---;
-	network_add                  :: proc(ctx: ^Ctx, message_id: u64, message_callback: message_proc)         # link_name "librg_network_add" ---;
-	network_remove               :: proc(ctx: ^Ctx, message_id: u64)                                         # link_name "librg_network_remove" ---;
-	network_send_all             :: proc(ctx: ^Ctx, data: ^rawptr, size: uint)                               # link_name "librg_network_send_all" ---;
-	network_send_to              :: proc(ctx: ^Ctx, peer: enet.Peer, data: ^rawptr, size: uint)              # link_name "librg_network_send_to" ---;
-	network_send_except          :: proc(ctx: ^Ctx, peer: enet.Peer, data: ^rawptr, size: uint)              # link_name "librg_network_send_except" ---;
-	network_send_instream        :: proc(ctx: ^Ctx, entity: u64, data: ^rawptr, size: uint)                  # link_name "librg_network_send_instream" ---;
-	network_send_instream_except :: proc(ctx: ^Ctx, entity: u64, peer: enet.Peer, data: ^rawptr, size: uint) # link_name "librg_network_send_instream_except" ---;
+	is_connected                 :: proc(ctx: ^Ctx)                                                    -> bool      # link_name "librg_is_connected" ---;
+	network_start                :: proc(ctx: ^Ctx, address: Address)                                               # link_name "librg_network_start" ---;
+	network_stop                 :: proc(ctx: ^Ctx)                                                                 # link_name "librg_network_stop" ---;
+	network_add                  :: proc(ctx: ^Ctx, message_id: u64, message_callback: message_proc)                # link_name "librg_network_add" ---;
+	network_remove               :: proc(ctx: ^Ctx, message_id: u64)                                                # link_name "librg_network_remove" ---;
+	network_send_all             :: proc(ctx: ^Ctx, data: ^rawptr, size: uint)                                      # link_name "librg_network_send_all" ---;
+	network_send_to              :: proc(ctx: ^Ctx, peer: enet.Peer, data: ^rawptr, size: uint)                     # link_name "librg_network_send_to" ---;
+	network_send_except          :: proc(ctx: ^Ctx, peer: enet.Peer, data: ^rawptr, size: uint)                     # link_name "librg_network_send_except" ---;
+	network_send_instream        :: proc(ctx: ^Ctx, entity: u64, data: ^rawptr, size: uint)                         # link_name "librg_network_send_instream" ---;
+	network_send_instream_except :: proc(ctx: ^Ctx, entity: u64, peer: enet.Peer, data: ^rawptr, size: uint)        # link_name "librg_network_send_instream_except" ---;
 }
 
+data_write :: proc(data: ^Data, value: $T) {
+	ptr := &value;
+	data_wptr(data, ptr, size_of(value));
+}
+
+data_read :: proc(data: ^Data, value: ^$T) {
+	ptr := value;
+	data_rptr(data, ptr, size_of(value));
+}
 
 Options :: enum i32 {
 	Platform_Id,
@@ -281,3 +267,6 @@ event_proc     :: #type proc(event: ^Event);
 
 MODE_SERVER :: 0;
 MODE_CLIENT :: 1;
+
+Entity :: u64;
+Data   :: rawptr;

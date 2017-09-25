@@ -20,6 +20,16 @@ main :: proc() {
 
 	event_add(&ctx, Event_Types.Connection_Accept, on_connect_accepted);
 
+	bs: Data;
+	data_init(&bs);
+	defer data_free(&bs);
+
+	data_write(&bs, cast(u32)10);
+
+	test: u32;
+	data_read(&bs, &test);
+	fmt.println(test);
+
 	host_name := "localhost\x00";
 	network_start(&ctx, Address{&host_name[0], 27010});
 
