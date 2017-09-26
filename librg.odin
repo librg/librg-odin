@@ -25,13 +25,13 @@ foreign librg32 {
 	entity_type                  :: proc(ctx: ^Ctx, entity: Entity) -> u32                                       # link_name "librg_entity_type" ---;
 	entity_destroy               :: proc(ctx: ^Ctx, entity: Entity)                                              # link_name "librg_entity_destroy" ---;
 	entity_query                 :: proc(ctx: ^Ctx, entity: Entity, result: ^^Entity) -> uint                    # link_name "librg_entity_query_raw" ---;
-	entity_get                   :: proc(ctx: ^Ctx, peer: enet.Peer) -> Entity                                   # link_name "librg_entity_get" ---;
+	entity_get                   :: proc(ctx: ^Ctx, peer: ^enet.Peer) -> Entity                                   # link_name "librg_entity_get" ---;
 	entity_set_visible           :: proc(ctx: ^Ctx, entity: Entity, state: bool)                                 # link_name "librg_entity_set_visible" ---;
 	entity_set_visible_for       :: proc(ctx: ^Ctx, entity: Entity, target: Entity, state: bool)                 # link_name "librg_entity_set_visible_for" ---;
 	entity_get_visible           :: proc(ctx: ^Ctx, entity: Entity) -> bool                                      # link_name "librg_entity_get_visible" ---;
 	entity_get_visible_for       :: proc(ctx: ^Ctx, entity: Entity, target: Entity) -> bool                      # link_name "librg_entity_get_visible_for" ---;
-	entity_control_set           :: proc(ctx: ^Ctx, entity: Entity, peer: enet.Peer)                             # link_name "librg_entity_control_set" ---;
-	entity_control_get           :: proc(ctx: ^Ctx, entity: Entity) -> enet.Peer                                 # link_name "librg_entity_control_get" ---;
+	entity_control_set           :: proc(ctx: ^Ctx, entity: Entity, peer: ^enet.Peer)                             # link_name "librg_entity_control_set" ---;
+	entity_control_get           :: proc(ctx: ^Ctx, entity: Entity) -> ^enet.Peer                                 # link_name "librg_entity_control_get" ---;
 	entity_control_remove        :: proc(ctx: ^Ctx, entity: Entity)                                              # link_name "librg_entity_control_remove" ---;
 	entity_each                  :: proc(ctx: ^Ctx, filter: Filter, callback: entity_proc)                       # link_name "librg_entity_each" ---;
 
@@ -68,10 +68,10 @@ foreign librg32 {
 	network_add                  :: proc(ctx: ^Ctx, message_id: u64, message_callback: message_proc)             # link_name "librg_network_add" ---;
 	network_remove               :: proc(ctx: ^Ctx, message_id: u64)                                             # link_name "librg_network_remove" ---;
 	network_send_all             :: proc(ctx: ^Ctx, data: ^rawptr, size: uint)                                   # link_name "librg_network_send_all" ---;
-	network_send_to              :: proc(ctx: ^Ctx, peer: enet.Peer, data: ^rawptr, size: uint)                  # link_name "librg_network_send_to" ---;
-	network_send_except          :: proc(ctx: ^Ctx, peer: enet.Peer, data: ^rawptr, size: uint)                  # link_name "librg_network_send_except" ---;
+	network_send_to              :: proc(ctx: ^Ctx, peer: ^enet.Peer, data: ^rawptr, size: uint)                  # link_name "librg_network_send_to" ---;
+	network_send_except          :: proc(ctx: ^Ctx, peer: ^enet.Peer, data: ^rawptr, size: uint)                  # link_name "librg_network_send_except" ---;
 	network_send_instream        :: proc(ctx: ^Ctx, entity: u64, data: ^rawptr, size: uint)                      # link_name "librg_network_send_instream" ---;
-	network_send_instream_except :: proc(ctx: ^Ctx, entity: u64, peer: enet.Peer, data: ^rawptr, size: uint)     # link_name "librg_network_send_instream_except" ---;
+	network_send_instream_except :: proc(ctx: ^Ctx, entity: u64, peer: ^enet.Peer, data: ^rawptr, size: uint)     # link_name "librg_network_send_instream_except" ---;
 }
 
 data_write :: proc(data: ^Data, value: $T) {
@@ -155,6 +155,15 @@ Component_Meta :: struct #ordered {
 	used:   rawptr,
 }
 
+Data :: struct #ordered {
+	data: rawptr,
+	cap,
+	read_pos,
+	write_pos: uint,
+
+	allocator: Allocator,
+}
+
 Entity_Pool :: struct #ordered {
 	cursor, count: u32,
 	limit_upper: u32,
@@ -168,14 +177,14 @@ Address :: struct #ordered {
 
 Message :: struct #ordered {
 	ctx: ^Ctx,
-	data: rawptr,
-	peer: enet.Peer,
-	packet: enet.Packet,
+	data: ^Data,
+	peer: ^enet.Peer,
+	packet: ^enet.Packet,
 }
 
 Event     :: struct #ordered {
 	ctx: ^Ctx,
-	data: ^rawptr,
+	data: ^Data,
 	entity: Entity,
 	userptr: rawptr,
 	rejected: u32,
@@ -190,7 +199,7 @@ Transform :: struct #ordered {
 }
 
 Control   :: struct #ordered {
-	peer: enet.Peer,
+	peer: ^enet.Peer,
 }
 
 Stream    :: struct #ordered {
@@ -203,7 +212,7 @@ Meta      :: struct #ordered {
 }
 
 Client    :: struct #ordered {
-	peer: enet.Peer,
+	peer: ^enet.Peer,
 	last_snapshot: Hash_Map,
 }
 
@@ -246,14 +255,20 @@ Ctx       :: struct #ordered {
 	messages: rawptr,
 
 	network: struct #ordered {
-		peer: enet.Peer,
-		host: enet.Host,
+		peer: ^enet.Peer,
+		host: ^enet.Host,
 
 		connected_peers: Hash_Map,
 	},
 
-	streams: struct #ordered {
-		input, output: Data,
+	streams: struct #raw_union {
+		using stream: struct {
+			input, output: Data,
+			upd_reliable,
+			upd_unreliable: Data,
+		},
+
+		streams: [DATA_STREAMS_AMOUNT]Data,
 	},
 
 	components: struct #ordered {
@@ -281,5 +296,6 @@ event_proc     :: #type proc(event: ^Event);
 MODE_SERVER :: 0;
 MODE_CLIENT :: 1;
 
+DATA_STREAMS_AMOUNT :: 4;
+
 Entity :: u32;
-Data   :: rawptr;

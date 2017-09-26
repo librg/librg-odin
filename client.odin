@@ -29,16 +29,6 @@ main :: proc() {
 
 	event_add(&ctx, Event_Types.Connection_Accept, on_connect_accepted);
 
-	bs: Data;
-	data_init(&bs);
-	defer data_free(&bs);
-
-	data_write(&bs, cast(u32)10);
-
-	test: u32;
-	data_read(&bs, &test);
-	fmt.println(test);
-
 	network_start(&ctx, make_address("localhost", 27010));
 
 	for {
