@@ -81,7 +81,7 @@ data_write :: proc(data: ^Data, value: $T) {
 
 data_read :: proc(data: ^Data, value: ^$T) {
 	ptr := value;
-	data_rptr(data, ptr, size_of(value));
+	data_rptr(data, ptr, size_of(value^));
 }
 
 make_address :: proc(host_name: string, port: i32) -> Address {
