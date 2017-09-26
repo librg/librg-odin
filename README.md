@@ -4,8 +4,8 @@ Odin bindings for librg framework.
 
 ## Dependencies
 
-* [odin-enet](https://github.com/zpl-c/odin-enet)
-* librg static library (included for convenience)
+* [odin-enet](https://github.com/zpl-c/odin-enet) (static library not needed)
+* librg static library
 
 ## Things to note
 
