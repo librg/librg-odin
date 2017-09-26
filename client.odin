@@ -12,10 +12,6 @@ Foo :: struct #ordered {
 	bar: u32,
 }
 
-on_connect_accepted :: proc(event: ^Event) {
-	fmt.println("successfully connected...");
-}
-
 main :: proc() {
 	ctx := Ctx{};
 
@@ -43,8 +39,7 @@ main :: proc() {
 	data_read(&bs, &test);
 	fmt.println(test);
 
-	host_name := "localhost\x00";
-	network_start(&ctx, Address{&host_name[0], 27010});
+	network_start(&ctx, make_address("localhost", 27010));
 
 	for {
 		tick(&ctx);

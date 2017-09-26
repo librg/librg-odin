@@ -27,8 +27,7 @@ main :: proc() {
 		fmt.println("spawning player...");
 	});
 
-	host_name := "localhost\x00";
-	network_start(&ctx, Address{&host_name[0], 27010});
+	network_start(&ctx, make_address("localhost", 27010));
 
 	foo := Foo{ 32 };
 
