@@ -3,7 +3,7 @@ when ODIN_OS == "windows" {
 	foreign_system_library librg32 "librg_static.lib";
 }
 
-import "shared:enet/enet.odin";
+import "shared:odin-enet/enet.odin";
 
 
 foreign librg32 {
@@ -268,6 +268,8 @@ Ctx       :: struct #ordered {
 
 		remove_queue: rawptr,
 	},
+
+	last_update: f32,
 }
 
 allocator_proc :: #type proc(allocator_data: rawptr, alloc_type: i32, size: int, alignment: int, old_mem: rawptr, old_size: int, flags: u64) -> rawptr;

@@ -42,6 +42,7 @@ main :: proc() {
 
 	for {
 		tick(&ctx);
+		fmt.println(ctx.last_update);
 		win32.sleep(1);
 	}
 }
