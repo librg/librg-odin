@@ -1,10 +1,10 @@
-using import "librg.odin";
+import "librg.odin";
 when ODIN_OS == "windows" do import win32 "core:sys/windows.odin";
 import "core:fmt.odin";
 
-FOO :: FIRST_FREE_COMPONENT;
+FOO :: librg.FIRST_FREE_COMPONENT;
 
-on_connect_accepted :: proc(event: ^Event) {
+on_connect_accepted :: proc(event: ^librg.Event) {
 	fmt.println("spawning player...");
 }
 
@@ -13,26 +13,26 @@ Foo :: struct #ordered {
 }
 
 main :: proc() {
-	ctx := Ctx{};
+	ctx := librg.Ctx{};
 
 	ctx.tick_delay = 32;
-	ctx.mode       = MODE_CLIENT;
-	ctx.world_size = Vector3{5000, 5000, 0};
+	ctx.mode       = librg.MODE_CLIENT;
+	ctx.world_size = librg.Vector3{5000, 5000, 0};
 	ctx.max_entities = 15000;
 	ctx.max_connections = 16;
 
-	init(&ctx, proc(ctx: ^Ctx) {
-		component_register(ctx, FOO, size_of(Foo));
+	librg.init(&ctx, proc(ctx: ^librg.Ctx) {
+		librg.component_register(ctx, FOO, size_of(Foo));
 	});
 
-	defer free(&ctx);
+	defer librg.free(&ctx);
 
-	event_add(&ctx, Event_Types.Connection_Accept, on_connect_accepted);
+	librg.event_add(&ctx, librg.Event_Types.Connection_Accept, on_connect_accepted);
 
-	network_start(&ctx, make_address("localhost", 27010));
+	librg.network_start(&ctx, librg.make_address("localhost", 27010));
 
 	for {
-		tick(&ctx);
+		librg.tick(&ctx);
 		win32.sleep(1);
 	}
 }
