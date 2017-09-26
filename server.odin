@@ -30,9 +30,12 @@ main :: proc() {
 	host_name := "localhost\x00";
 	network_start(&ctx, Address{&host_name[0], 27010});
 
+	foo := Foo{ 32 };
+
 	for i in 0..10000 {
 		enemy := entity_create(&ctx, 0);
-		component_attach(&ctx, FOO, enemy, nil);
+		component_attach(&ctx, FOO, enemy, &foo);
+
 		transform := cast(^Transform)component_fetch(&ctx, Component_Types.Transform, enemy);
 		transform.position.x = 42*cast(f32)i;
 		transform.position.y = 80*cast(f32)i;

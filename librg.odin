@@ -3,7 +3,7 @@ when ODIN_OS == "windows" {
 	foreign_system_library librg32 "librg_static.lib";
 }
 
-import "enet.odin";
+import "shared:enet/enet.odin";
 
 
 foreign librg32 {
