@@ -135,6 +135,10 @@ Component_Types :: enum i32 {
 	First_Free,
 }
 
+Event_Flags :: enum i32 {
+	Rejected = (1 << 0),
+}
+
 FIRST_FREE_COMPONENT :: Component_Types.First_Free;
 
 Filter :: struct #raw_union {
@@ -178,17 +182,18 @@ Address :: struct #ordered {
 
 Message :: struct #ordered {
 	ctx: ^Ctx,
-	data: ^Data,
 	peer: ^enet.Peer,
+	data: ^Data,
 	packet: ^enet.Packet,
 }
 
 Event     :: struct #ordered {
 	ctx: ^Ctx,
+	flags: Event_Flags,
 	data: ^Data,
+	peer: ^enet.Peer,
 	entity: Entity,
 	userptr: rawptr,
-	rejected: u32,
 }
 
 Vector3   :: struct #ordered {
@@ -205,6 +210,7 @@ Control   :: struct #ordered {
 
 Stream    :: struct #ordered {
 	range: u32,
+	last_query: rawptr,
 }
 
 Meta      :: struct #ordered {
