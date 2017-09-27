@@ -7,8 +7,8 @@ import "shared:odin-enet/enet.odin";
 
 
 foreign librg32 {
-	options_set                  :: proc(option: Options, value: u32)                                            # link_name "librg_options_set" ---;
-	options_get                  :: proc(option: Options) -> u32                                                 # link_name "librg_options_get" ---;
+	option_set                  :: proc(option: Options, value: u32)                                            # link_name "librg_option_set" ---;
+	option_get                  :: proc(option: Options) -> u32                                                 # link_name "librg_option_get" ---;
 
 	init                         :: proc(ctx: ^Ctx, comp: component_proc)                                        # link_name "librg_init" ---;
 	tick                         :: proc(ctx: ^Ctx)                                                              # link_name "librg_tick" ---;
@@ -101,6 +101,7 @@ Options :: enum i32 {
 	Network_Primary_Channel,
 	Network_Secondary_Channel,
 	Network_Message_Channel,
+	Network_Max_Entities_Per_Branch,
 
 	Options_Size,
 }
