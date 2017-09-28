@@ -102,6 +102,7 @@ Options :: enum i32 {
 	Network_Secondary_Channel,
 	Network_Message_Channel,
 	Network_Max_Entities_Per_Branch,
+	Network_Max_Threads_Per_Update,
 
 	Options_Size,
 }
@@ -276,6 +277,13 @@ Ctx       :: struct #ordered {
 		},
 
 		streams: [DATA_STREAMS_AMOUNT]Data,
+	},
+
+	threading: struct #ordered {
+		signal: i32,
+		work_count: i32,
+		update_workers: rawptr,
+		send_lock: rawptr,
 	},
 
 	components: struct #ordered {
