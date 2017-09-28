@@ -300,6 +300,7 @@ Ctx       :: struct #ordered {
 	},
 
 	last_update: f32,
+	user_data: rawptr,
 }
 
 allocator_proc :: #type proc(allocator_data: rawptr, alloc_type: i32, size: int, alignment: int, old_mem: rawptr, old_size: int, flags: u64) -> rawptr;
