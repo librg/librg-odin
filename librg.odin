@@ -10,7 +10,7 @@ foreign librg32 {
 	option_set                   :: proc(option: Options, value: u32)                                               # link_name "librg_option_set" ---;
 	option_get                   :: proc(option: Options) -> u32                                                    # link_name "librg_option_get" ---;
 
-	init                         :: proc(ctx: ^Ctx, comp: component_proc)                                           # link_name "librg_init" ---;
+	init                         :: proc(ctx: ^Ctx, comp: Component_Proc)                                           # link_name "librg_init" ---;
 	tick                         :: proc(ctx: ^Ctx)                                                                 # link_name "librg_tick" ---;
 	free                         :: proc(ctx: ^Ctx)                                                                 # link_name "librg_free" ---;
 	release                      :: proc(ptr: rawptr)                                                               # link_name "librg_release" ---;
@@ -33,15 +33,15 @@ foreign librg32 {
 	entity_control_set           :: proc(ctx: ^Ctx, entity: Entity, peer: ^enet.Peer)                               # link_name "librg_entity_control_set" ---;
 	entity_control_get           :: proc(ctx: ^Ctx, entity: Entity) -> ^enet.Peer                                   # link_name "librg_entity_control_get" ---;
 	entity_control_remove        :: proc(ctx: ^Ctx, entity: Entity)                                                 # link_name "librg_entity_control_remove" ---;
-	entity_each                  :: proc(ctx: ^Ctx, filter: Filter, callback: entity_proc)                          # link_name "librg_entity_each" ---;
+	entity_each                  :: proc(ctx: ^Ctx, filter: Filter, callback: Entity_Proc)                          # link_name "librg_entity_each" ---;
 
 	component_register           :: proc(ctx: ^Ctx, index: Component_Types, comp_size: uint)                        # link_name "librg_component_register" ---;
 	component_attach             :: proc(ctx: ^Ctx, index: Component_Types, entity: Entity, data: rawptr) -> rawptr # link_name "librg_component_attach" ---;
 	component_fetch              :: proc(ctx: ^Ctx, index: Component_Types, entity: Entity) -> rawptr               # link_name "librg_component_fetch" ---;
 	component_detach             :: proc(ctx: ^Ctx, index: Component_Types, entity: Entity)                         # link_name "librg_component_detach" ---;
-	component_each               :: proc(ctx: ^Ctx, index: Component_Types, callback: entity_proc)                  # link_name "librg_component_each" ---;
+	component_each               :: proc(ctx: ^Ctx, index: Component_Types, callback: Entity_Proc)                  # link_name "librg_component_each" ---;
 
-	event_add                    :: proc(ctx: ^Ctx, event_id: Event_Types, callback: event_proc) -> u64             # link_name "librg_event_add" ---;
+	event_add                    :: proc(ctx: ^Ctx, event_id: Event_Types, callback: Event_Proc) -> u64             # link_name "librg_event_add" ---;
 	event_remove                 :: proc(ctx: ^Ctx, event_id: Event_Types, index: u64)                              # link_name "librg_event_remove" ---;
 	event_trigger                :: proc(ctx: ^Ctx, event_id: Event_Types, event: ^Event)                           # link_name "librg_event_trigger" ---;
 	event_reject                 :: proc(event: ^Event)                                                             # link_name "librg_event_reject" ---;
@@ -65,7 +65,7 @@ foreign librg32 {
 	is_connected                 :: proc(ctx: ^Ctx) -> bool                                                         # link_name "librg_is_connected" ---;
 	network_start                :: proc(ctx: ^Ctx, address: Address)                                               # link_name "librg_network_start" ---;
 	network_stop                 :: proc(ctx: ^Ctx)                                                                 # link_name "librg_network_stop" ---;
-	network_add                  :: proc(ctx: ^Ctx, message_id: u64, message_callback: message_proc)                # link_name "librg_network_add" ---;
+	network_add                  :: proc(ctx: ^Ctx, message_id: u64, message_callback: Message_Proc)                # link_name "librg_network_add" ---;
 	network_remove               :: proc(ctx: ^Ctx, message_id: u64)                                                # link_name "librg_network_remove" ---;
 	network_send_all             :: proc(ctx: ^Ctx, data: ^rawptr, size: uint)                                      # link_name "librg_network_send_all" ---;
 	network_send_to              :: proc(ctx: ^Ctx, peer: ^enet.Peer, data: ^rawptr, size: uint)                    # link_name "librg_network_send_to" ---;
@@ -224,11 +224,6 @@ Client    :: struct #ordered {
 	last_snapshot: Hash_Map,
 }
 
-Allocator :: struct #ordered {
-	allocator: allocator_proc,
-	data: rawptr,
-}
-
 Bounds    :: struct #ordered {
 	centre, half_size: Vector3,
 }
@@ -303,11 +298,10 @@ Ctx       :: struct #ordered {
 	user_data: rawptr,
 }
 
-allocator_proc :: #type proc(allocator_data: rawptr, alloc_type: i32, size: int, alignment: int, old_mem: rawptr, old_size: int, flags: u64) -> rawptr;
-component_proc :: #type proc(ctx: ^Ctx);
-message_proc   :: #type proc(msg: ^Message);
-entity_proc    :: #type proc(ctx: ^Ctx, entity: u64);
-event_proc     :: #type proc(event: ^Event);
+Component_Proc :: #type proc(ctx: ^Ctx);
+Message_Proc   :: #type proc(msg: ^Message);
+Entity_Proc    :: #type proc(ctx: ^Ctx, entity: u64);
+Event_Proc     :: #type proc(event: ^Event);
 
 MODE_SERVER :: 0;
 MODE_CLIENT :: 1;
