@@ -24,7 +24,7 @@ foreign librg32 {
 	entity_valid                 :: proc(ctx: ^Ctx, entity: Entity) -> bool                                         # link_name "librg_entity_valid" ---;
 	entity_type                  :: proc(ctx: ^Ctx, entity: Entity) -> u32                                          # link_name "librg_entity_type" ---;
 	entity_destroy               :: proc(ctx: ^Ctx, entity: Entity)                                                 # link_name "librg_entity_destroy" ---;
-	entity_query                 :: proc(ctx: ^Ctx, entity: Entity, result: ^^Entity) -> uint                       # link_name "librg_entity_query_raw" ---;
+	entity_query                 :: proc(ctx: ^Ctx, entity: Entity, result: ^^Entity) -> uint                       # link_name "librg_entity_query" ---;
 	entity_get                   :: proc(ctx: ^Ctx, peer: ^enet.Peer) -> Entity                                     # link_name "librg_entity_get" ---;
 	entity_set_visible           :: proc(ctx: ^Ctx, entity: Entity, state: bool)                                    # link_name "librg_entity_set_visible" ---;
 	entity_set_visible_for       :: proc(ctx: ^Ctx, entity: Entity, target: Entity, state: bool)                    # link_name "librg_entity_set_visible_for" ---;
@@ -212,6 +212,7 @@ Control   :: struct #ordered {
 Stream    :: struct #ordered {
 	range: u32,
 	last_query: rawptr,
+	branch: ^Streamer,
 }
 
 Meta      :: struct #ordered {
@@ -234,6 +235,8 @@ Streamer  :: struct #ordered {
 	dimensions: int,
 	boundary: Bounds,
 	nodes: rawptr,
+	free_nodes: rawptr,
+	free_node_count: uint,
 	trees: rawptr,
 }
 
