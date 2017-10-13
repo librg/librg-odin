@@ -234,6 +234,8 @@ Streamer  :: struct #ordered {
 	max_nodes: u32,
 	dimensions: int,
 	boundary: Bounds,
+	min_bounds: Vector3,
+	use_min_bounds: u32,
 	nodes: rawptr,
 	free_nodes: rawptr,
 	free_node_count: uint,
@@ -256,7 +258,7 @@ Ctx       :: struct #ordered {
 	max_connections: u16,
 	max_entities,
 	max_components: u32,
-	world_size: Vector3,
+	world_size, min_branch_size: Vector3,
 
 	messages: rawptr,
 
