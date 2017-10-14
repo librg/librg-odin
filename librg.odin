@@ -194,7 +194,7 @@ Event     :: struct #ordered {
 	data: ^Data,
 	peer: ^enet.Peer,
 	entity: Entity,
-	userptr: rawptr,
+	user_data: rawptr,
 }
 
 Vector3   :: struct #ordered {
