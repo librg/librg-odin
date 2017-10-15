@@ -1,6 +1,6 @@
 when ODIN_OS == "windows" {
 	import "core:sys/windows.odin";
-	foreign_library librg32 "librg_static.lib";
+	foreign import librg32 "librg_static.lib";
 }
 
 import "shared:odin-enet/enet.odin";
