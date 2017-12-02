@@ -2,14 +2,8 @@ import "librg.odin";
 when ODIN_OS == "windows" do import win32 "core:sys/windows.odin";
 import "core:fmt.odin";
 
-FOO :: librg.FIRST_FREE_COMPONENT;
-
 on_connect_accepted :: proc(event: ^librg.Event) {
 	fmt.println("spawning player...");
-}
-
-Foo :: struct #ordered {
-	bar: u32,
 }
 
 main :: proc() {
@@ -21,9 +15,7 @@ main :: proc() {
 	ctx.max_entities = 15000;
 	ctx.max_connections = 16;
 
-	librg.init(&ctx, proc(ctx: ^librg.Ctx) {
-		librg.component_register(ctx, FOO, size_of(Foo));
-	});
+	librg.init(&ctx);
 
 	defer librg.free(&ctx);
 

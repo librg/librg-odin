@@ -5,188 +5,67 @@ when ODIN_OS == "windows" {
 
 import "shared:odin-enet/enet.odin";
 
-
+@(link_prefix="librg_", default_calling_convention="c")
 foreign librg32 {
-
-	@(link_name="librg_option_set")
 	option_set                   :: proc(option: Options, value: u32) ---;
-
-	@(link_name="librg_option_get")
 	option_get                   :: proc(option: Options) -> u32 ---;
 
-
-	@(link_name="librg_init")
-	init                         :: proc(ctx: ^Ctx, comp: Component_Proc) ---;
-
-	@(link_name="librg_tick")
+	init                         :: proc(ctx: ^Ctx) ---;
 	tick                         :: proc(ctx: ^Ctx) ---;
-
-	@(link_name="librg_free")
 	free                         :: proc(ctx: ^Ctx) ---;
-
-	@(link_name="librg_release")
 	release                      :: proc(ptr: rawptr) ---;
-
-	@(link_name="librg_release_array")
 	release_array                :: proc(ptr: rawptr) ---;
 
-
-	@(link_name="librg_is_server")
 	is_server                    :: proc(ctx: ^Ctx) -> bool ---;
-
-	@(link_name="librg_is_client")
 	is_client                    :: proc(ctx: ^Ctx) -> bool ---;
 
+	entity_create                :: proc(ctx: ^Ctx, etype: u32) -> ^Entity ---;
+	entity_valid                 :: proc(ctx: ^Ctx, entity: Entity_ID) -> bool ---;
+	entity_type                  :: proc(ctx: ^Ctx, entity: Entity_ID) -> u32 ---;
+	entity_destroy               :: proc(ctx: ^Ctx, entity: Entity_ID) ---;
+	entity_fetch                 :: proc(ctx: ^Ctx, entity: Entity_ID) -> ^Entity ---;
+	entity_query                 :: proc(ctx: ^Ctx, entity: Entity_ID, result: ^^Entity_ID) -> uint ---;
+	entity_find                  :: proc(ctx: ^Ctx, peer: ^enet.Peer) -> ^Entity ---;
+	entity_visibility_set        :: proc(ctx: ^Ctx, entity: Entity_ID, state: bool) ---;
+	entity_visibility_set_for    :: proc(ctx: ^Ctx, entity: Entity_ID, target: Entity, state: bool) ---;
+	entity_visibility_get        :: proc(ctx: ^Ctx, entity: Entity_ID) -> bool ---;
+	entity_visibility_get_for    :: proc(ctx: ^Ctx, entity: Entity_ID, target: Entity) -> bool ---;
+	entity_control_set           :: proc(ctx: ^Ctx, entity: Entity_ID, peer: ^enet.Peer) ---;
+	entity_control_get           :: proc(ctx: ^Ctx, entity: Entity_ID) -> ^enet.Peer ---;
+	entity_control_remove        :: proc(ctx: ^Ctx, entity: Entity_ID) ---;
+	entity_iterate               :: proc(ctx: ^Ctx, flags: u64, callback: Entity_Proc) ---;
 
-	@(link_name="librg_entity_create")
-	entity_create                :: proc(ctx: ^Ctx, etype: u32) -> Entity ---;
-
-	@(link_name="librg_entity_create_shared")
-	entity_create_shared         :: proc(ctx: ^Ctx, remote: Entity, etype: u32) -> Entity ---;
-
-	@(link_name="librg_entity_valid")
-	entity_valid                 :: proc(ctx: ^Ctx, entity: Entity) -> bool ---;
-
-	@(link_name="librg_entity_type")
-	entity_type                  :: proc(ctx: ^Ctx, entity: Entity) -> u32 ---;
-
-	@(link_name="librg_entity_destroy")
-	entity_destroy               :: proc(ctx: ^Ctx, entity: Entity) ---;
-
-	@(link_name="librg_entity_query")
-	entity_query                 :: proc(ctx: ^Ctx, entity: Entity, result: ^^Entity) -> uint ---;
-
-	@(link_name="librg_entity_get")
-	entity_get                   :: proc(ctx: ^Ctx, peer: ^enet.Peer) -> Entity ---;
-
-	@(link_name="librg_entity_set_visible")
-	entity_set_visible           :: proc(ctx: ^Ctx, entity: Entity, state: bool) ---;
-
-	@(link_name="librg_entity_set_visible_for")
-	entity_set_visible_for       :: proc(ctx: ^Ctx, entity: Entity, target: Entity, state: bool) ---;
-
-	@(link_name="librg_entity_get_visible")
-	entity_get_visible           :: proc(ctx: ^Ctx, entity: Entity) -> bool ---;
-
-	@(link_name="librg_entity_get_visible_for")
-	entity_get_visible_for       :: proc(ctx: ^Ctx, entity: Entity, target: Entity) -> bool ---;
-
-	@(link_name="librg_entity_control_set")
-	entity_control_set           :: proc(ctx: ^Ctx, entity: Entity, peer: ^enet.Peer) ---;
-
-	@(link_name="librg_entity_control_get")
-	entity_control_get           :: proc(ctx: ^Ctx, entity: Entity) -> ^enet.Peer ---;
-
-	@(link_name="librg_entity_control_remove")
-	entity_control_remove        :: proc(ctx: ^Ctx, entity: Entity) ---;
-
-	@(link_name="librg_entity_each")
-	entity_each                  :: proc(ctx: ^Ctx, filter: Filter, callback: Entity_Proc) ---;
-
-
-	@(link_name="librg_component_register")
-	component_register           :: proc(ctx: ^Ctx, index: Component_Types, comp_size: uint) ---;
-
-	@(link_name="librg_component_attach")
-	component_attach             :: proc(ctx: ^Ctx, index: Component_Types, entity: Entity, data: rawptr) -> rawptr ---;
-
-	@(link_name="librg_component_fetch")
-	component_fetch              :: proc(ctx: ^Ctx, index: Component_Types, entity: Entity) -> rawptr ---;
-
-	@(link_name="librg_component_detach")
-	component_detach             :: proc(ctx: ^Ctx, index: Component_Types, entity: Entity) ---;
-
-	@(link_name="librg_component_each")
-	component_each               :: proc(ctx: ^Ctx, index: Component_Types, callback: Entity_Proc) ---;
-
-
-	@(link_name="librg_event_add")
 	event_add                    :: proc(ctx: ^Ctx, event_id: Event_Types, callback: Event_Proc) -> u64 ---;
-
-	@(link_name="librg_event_remove")
 	event_remove                 :: proc(ctx: ^Ctx, event_id: Event_Types, index: u64) ---;
-
-	@(link_name="librg_event_trigger")
 	event_trigger                :: proc(ctx: ^Ctx, event_id: Event_Types, event: ^Event) ---;
-
-	@(link_name="librg_event_reject")
 	event_reject                 :: proc(event: ^Event) ---;
-
-	@(link_name="librg_event_succeeded")
+	event_rejectable             :: proc(event: ^Event) -> i32 ---;
 	event_succeeded              :: proc(event: ^Event) ---;
 
-
-	@(link_name="librg_data_init")
 	data_init                    :: proc(data: ^Data) ---;
-
-	@(link_name="librg_data_init_size")
 	data_init_size               :: proc(data: ^Data, size: uint) ---;
-
-	@(link_name="librg_data_free")
 	data_free                    :: proc(data: ^Data) ---;
-
-	@(link_name="librg_data_reset")
 	data_reset                   :: proc(data: ^Data) ---;
-
-	@(link_name="librg_data_grow")
 	data_grow                    :: proc(data: ^Data, min_size: uint) ---;
-
-	@(link_name="librg_data_capacity")
 	data_capacity                :: proc(data: ^Data) -> uint ---;
-
-	@(link_name="librg_data_get_rpos")
 	data_get_rpos                :: proc(data: ^Data) -> uint ---;
-
-	@(link_name="librg_data_get_wpos")
 	data_get_wpos                :: proc(data: ^Data) -> uint ---;
-
-	@(link_name="librg_data_set_rpos")
 	data_set_rpos                :: proc(data: ^Data, position: uint) ---;
-
-	@(link_name="librg_data_set_wpos")
 	data_set_wpos                :: proc(data: ^Data, position: uint) ---;
-
-	@(link_name="librg_data_rptr")
 	data_rptr                    :: proc(data: ^Data, ptr: rawptr, size: uint) ---;
-
-	@(link_name="librg_data_wptr")
 	data_wptr                    :: proc(data: ^Data, ptr: rawptr, size: uint) ---;
-
-	@(link_name="librg_data_rptr_at")
 	data_rptr_at                 :: proc(data: ^Data, ptr: rawptr, size: uint, position: uint) ---;
-
-	@(link_name="librg_data_wptr_at")
 	data_wptr_at                 :: proc(data: ^Data, ptr: rawptr, size: uint, position: uint) ---;
 
-
-	@(link_name="librg_is_connected")
 	is_connected                 :: proc(ctx: ^Ctx) -> bool ---;
-
-	@(link_name="librg_network_start")
 	network_start                :: proc(ctx: ^Ctx, address: Address) ---;
-
-	@(link_name="librg_network_stop")
 	network_stop                 :: proc(ctx: ^Ctx) ---;
-
-	@(link_name="librg_network_add")
 	network_add                  :: proc(ctx: ^Ctx, message_id: u64, message_callback: Message_Proc) ---;
-
-	@(link_name="librg_network_remove")
 	network_remove               :: proc(ctx: ^Ctx, message_id: u64) ---;
-
-	@(link_name="librg_network_send_all")
 	network_send_all             :: proc(ctx: ^Ctx, data: ^rawptr, size: uint) ---;
-
-	@(link_name="librg_network_send_to")
 	network_send_to              :: proc(ctx: ^Ctx, peer: ^enet.Peer, data: ^rawptr, size: uint) ---;
-
-	@(link_name="librg_network_send_except")
 	network_send_except          :: proc(ctx: ^Ctx, peer: ^enet.Peer, data: ^rawptr, size: uint) ---;
-
-	@(link_name="librg_network_send_instream")
 	network_send_instream        :: proc(ctx: ^Ctx, entity: u64, data: ^rawptr, size: uint) ---;
-
-	@(link_name="librg_network_send_instream_except")
 	network_send_instream_except :: proc(ctx: ^Ctx, entity: u64, peer: ^enet.Peer, data: ^rawptr, size: uint) ---;
 }
 
@@ -201,7 +80,7 @@ data_read :: proc(data: ^Data, value: ^$T) {
 }
 
 make_address :: proc(host_name: string, port: i32) -> Address {
-	return Address{&host_name[0], port};
+	return Address{port, &host_name[0]};
 }
 
 Options :: enum i32 {
@@ -210,6 +89,7 @@ Options :: enum i32 {
 	Platform_Build,
 
 	Default_Client_Type,
+	Default_Stream_Range,
 	Default_Data_Size,
 
 	Network_Capacity,
@@ -217,6 +97,7 @@ Options :: enum i32 {
 	Network_Primary_Channel,
 	Network_Secondary_Channel,
 	Network_Message_Channel,
+
 	Network_Max_Entities_Per_Branch,
 	Network_Max_Threads_Per_Update,
 
@@ -242,39 +123,21 @@ Event_Types :: enum i32 {
 
 FIRST_FREE_EVENT :: Event_Types.First_Free;
 
-Component_Types :: enum i32 {
-	Dummy,
-	Meta,
-	Transform,
-	Stream,
-	Control,
-	Client,
-	First_Free,
+Entity_Flags :: enum i32 {
+	None       = 0,
+	Alive      = (1 << 0),
+	Client     = (1 << 1),
+	Ignoring   = (1 << 2),
+	Queried    = (1 << 3),
+	Controlled = (1 << 4),
 }
 
 Event_Flags :: enum i32 {
-	Rejected = (1 << 0),
-}
-
-FIRST_FREE_COMPONENT :: Component_Types.First_Free;
-
-Filter :: struct #raw_union {
-	struct {
-		contains1, contains2, contains3, contains4,
-		contains5, contains6, contains7, contains8: u32,
-		excludes1, excludes2, excludes3, excludes4: u32,
-	},
-
-	struct {
-		contains: [8]u32,
-		excludes: [4]u32,
-	},
-}
-
-Component_Meta :: struct #ordered {
-	offset: uint,
-	size:   uint,
-	used:   rawptr,
+	None       = 0,
+	Rejected   = (1 << 0),
+	Rejectable = (1 << 1),
+	Remote     = (1 << 2),
+	Local      = (1 << 3),
 }
 
 Data :: struct #ordered {
@@ -286,15 +149,27 @@ Data :: struct #ordered {
 	allocator: Allocator,
 }
 
-Entity_Pool :: struct #ordered {
-	cursor, count: u32,
-	limit_upper: u32,
-	limit_lower: u32,
+Entity :: struct #ordered {
+	id: u32,
+	kind: u32,
+	flags: u64,
+
+	position: Vector3,
+	stream_range: f32,
+
+	user_data: rawptr,
+	stream_branch: ^Streamer,
+
+	ignored, last_snapshot: Hash_Map,
+
+	client_peer, control_peer: ^enet.Peer,
+
+	last_query: rawptr
 }
 
 Address :: struct #ordered {
-	host: ^u8,
 	port: i32,
+	host: ^u8,
 }
 
 Message :: struct #ordered {
@@ -309,37 +184,13 @@ Event     :: struct #ordered {
 	ctx: ^Ctx,
 	data: ^Data,
 	peer: ^enet.Peer,
-	entity: Entity,
+	entity: ^Entity,
 	flags: Event_Flags,
 	user_data: rawptr,
 }
 
 Vector3   :: struct #ordered {
 	x, y, z: f32,
-}
-
-Transform :: struct #ordered {
-	position: Vector3,
-}
-
-Control   :: struct #ordered {
-	peer: ^enet.Peer,
-}
-
-Stream    :: struct #ordered {
-	range: u32,
-	last_query: rawptr,
-	branch: ^Streamer,
-}
-
-Meta      :: struct #ordered {
-	etype: u32,
-	ignored: Hash_Map,
-}
-
-Client    :: struct #ordered {
-	peer: ^enet.Peer,
-	last_snapshot: Hash_Map,
 }
 
 Bounds    :: struct #ordered {
@@ -364,26 +215,29 @@ Hash_Map     :: struct #ordered {
 }
 
 Ctx       :: struct #ordered {
-	allocator: Allocator,
-	timers: rawptr,
-	events: Hash_Map,
-	streamer: Streamer,
-
-	mode: u8,
+	mode: u16,
 	tick_delay: u16,
 
 	max_connections: u16,
-	max_entities,
-	max_components: u32,
+	max_entities: u32,
 	world_size, min_branch_size: Vector3,
 
-	messages: rawptr,
+	last_update: f32,
+	user_data: rawptr,
 
 	network: struct #ordered {
 		peer: ^enet.Peer,
 		host: ^enet.Host,
 
 		connected_peers: Hash_Map,
+	},
+
+	entity: struct #ordered {
+		count: u32,
+		cursor: u32,
+		ignored: Hash_Map,
+		list: rawptr,
+		remove_queue: rawptr,
 	},
 
 	streams: struct #raw_union {
@@ -396,31 +250,14 @@ Ctx       :: struct #ordered {
 		streams: [DATA_STREAMS_AMOUNT]Data,
 	},
 
-	threading: struct #ordered {
-		signal: i32,
-		work_count: i32,
-		update_workers: rawptr,
-		send_lock: rawptr,
-	},
+	messages: rawptr,
 
-	components: struct #ordered {
-		data: rawptr,
-		size, count: uint,
-		headers: rawptr,
-	},
-
-	entity: struct #ordered {
-		ignored: Hash_Map,
-		shared, native: Entity_Pool,
-
-		remove_queue: rawptr,
-	},
-
-	last_update: f32,
-	user_data: rawptr,
+	allocator: Allocator,
+	timers: rawptr,
+	events: rawptr,
+	streamer: Streamer,
 }
 
-Component_Proc :: #type proc(ctx: ^Ctx);
 Message_Proc   :: #type proc(msg: ^Message);
 Entity_Proc    :: #type proc(ctx: ^Ctx, entity: u64);
 Event_Proc     :: #type proc(event: ^Event);
@@ -430,4 +267,4 @@ MODE_CLIENT :: 1;
 
 DATA_STREAMS_AMOUNT :: 4;
 
-Entity :: u32;
+Entity_ID :: u32;

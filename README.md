@@ -1,6 +1,7 @@
 # odin-librg
 
-Odin bindings for librg framework.
+Odin binding for librg framework.
+Written for **3.0.2** version. Binding doesn't support librg compiled with `LIBRG_THREADING` enabled.
 
 ## Dependencies
 
@@ -9,7 +10,6 @@ Odin bindings for librg framework.
 
 ## Things to note
 
-* Currently works only on Windows.
 * Some methods are inconvenient to use, further simplification in process.
 
 ## License
