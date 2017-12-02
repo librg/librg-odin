@@ -1,12 +1,16 @@
 when ODIN_OS == "windows" {
-	import "core:sys/windows.odin";
-	foreign import librg32 "librg_static.lib";
+	import "core:sys/windows.odin"
+	foreign import lib "librg_static.lib"
 }
 
-import "shared:odin-enet/enet.odin";
+when ODIN_OS == "linux" || ODIN_OS == "macos" {
+	foreign import lib "librg_static.lib"
+}
+
+import "shared:odin-enet/enet.odin"
 
 @(link_prefix="librg_", default_calling_convention="c")
-foreign librg32 {
+foreign lib {
 	option_set                   :: proc(option: Options, value: u32) ---;
 	option_get                   :: proc(option: Options) -> u32 ---;
 
