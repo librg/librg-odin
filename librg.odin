@@ -263,7 +263,7 @@ Ctx       :: struct #ordered {
 }
 
 Message_Proc   :: #type proc(msg: ^Message);
-Entity_Proc    :: #type proc(ctx: ^Ctx, entity: u64);
+Entity_Proc    :: #type proc(ctx: ^Ctx, entity: ^Entity);
 Event_Proc     :: #type proc(event: ^Event);
 
 MODE_SERVER :: 0;

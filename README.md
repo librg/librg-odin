@@ -1,7 +1,7 @@
 # odin-librg
 
 Odin binding for librg framework.
-Written for **3.0.2** version. Binding doesn't support librg compiled with `LIBRG_THREADING` enabled.
+Written for **3.0.5** version. Binding doesn't support librg compiled with `LIBRG_THREADING` enabled.
 
 ## Dependencies
 
