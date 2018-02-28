@@ -3,6 +3,8 @@
 Odin binding for librg framework.
 Written for **3.0.5** version. Binding doesn't support librg compiled with `LIBRG_THREADING` enabled.
 
+**NOTE:** This repo is out-of-date and requires updating to the latest Odin's version. However, due to my time constraint, I am not able to perform such an action. If you're willing to update it, I'd be happy to assist and accept any changes.
+
 ## Dependencies
 
 * [odin-enet](https://github.com/zpl-c/odin-enet) (static library not needed)
@@ -14,5 +16,4 @@ Written for **3.0.5** version. Binding doesn't support librg compiled with `LIBR
 
 ## License
 
-This content is dual-licensed to either the public domain or under the following: `you are granted a perpetual, irrevocable license to copy, modify,
-    publish, and distribute this content as you see fit. NO WARRANTY IS IMPLIED, USE AT YOUR OWN RISK!`
+Apache License 2.0
